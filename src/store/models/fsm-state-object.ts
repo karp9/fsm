@@ -4,7 +4,6 @@ export interface FsmState {
     initialNodeId: string;
     step: string;
     previousStep: string;
-    data: Array<any>;
     dataMap: Map<string, any>;
     stepsHistory: Array<any>;
     newDataCount: number;

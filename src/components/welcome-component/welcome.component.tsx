@@ -3,63 +3,70 @@ import { Subscription } from 'rxjs';
 import { WizardSteps } from '../../enums/wiz-steps';
 import { FsmStore } from '../../store/fsm';
 import { FsmState } from '../../store/models/fsm-state-object';
-import {Node} from '../../store/models/node'
+import { Node } from '../../store/models/node'
 import '../welcome-component/welcome.component.scss';
 
 export interface IProps {
-    fsmStore: FsmStore<WizardSteps>,
-    wizardSteps: WizardSteps
+    fsmStore: FsmStore;
 };
 
 export interface IState {
-    wizardStep: string,
     fsmState: FsmState;
 }
 
 
 export function WelcomeComponent(props: IProps) {
-    let fsmStore = props.fsmStore;
-    let [fsmState, setFsmState] = useState(props.fsmStore.initialState);
-    let subscription$: Subscription;
-    const currentStep = props.wizardSteps.initial;
+    const fsmStore = props.fsmStore;
+    const [fsmState, setFsmState] = useState(props.fsmStore.getState());
+    // for cleanup
+    const [subscription$, setSubscription] = useState<Subscription>();
     let selectedValue = '';
 
     useEffect(() => {
-        subscription$ = fsmStore.subscribe(setFsmState);
+        const subscription = fsmStore.subscribe(setFsmState);
+        setSubscription(subscription);
         return () => {
-            subscription$.unsubscribe();
+            if (subscription$) {
+                subscription$.unsubscribe();
+            }
+            console.log("unMount was called welcome");
         }
     }, []);
 
+
     const handleChange = (event: any) => {
         const nodeId = event.target.value;
-        if(nodeId) {
-            fsmStore.transition({moshe: '2'}, nodeId);
+        if (nodeId) {
+            fsmStore.transition(nodeId, { name: 'moshe', id: '22123', nodeId: nodeId });
         }
     }
+    const startOverClick = (event: any) => {
+        fsmStore.init(fsmState.nodes, fsmState.links, fsmState.initialNodeId);
+    }
 
+    const currentNode = fsmState.nodeIdToNode.get(fsmState.step);
+    const currentStepOptions = fsmState.nodeIdToNodes.get(fsmState.step);
     return (
         <div className="container">
             <div>welcome component</div>
-            <div>Current step: {fsmState.nodeIdToNode.get(fsmState.step)?.name}</div>
-            {!!fsmState.error &&
+            <div>Current Step: {currentNode?.name}</div>
+            {fsmState.error &&
                 <div> {fsmState.error}</div>
             }
             <div>
-                { fsmState.nodeIdToNodes.get(fsmState.step)?.length && 
+                {currentStepOptions?.length &&
                     <select value={selectedValue} onChange={handleChange} name="optional-steps" id="">
                         <option key={'empty'} value={''}>Select a node</option>
-                        {fsmState.nodeIdToNodes.get(fsmState.step)?.map((node, index) => {
-                           return <option key={index} value={node.id}>{node.name}</option>
+                        {currentStepOptions.map((node, index) => {
+                            return <option key={index} value={node.id}>{node.name}</option>
                         })}
                     </select>
 
                 }
             </div>
-
+            <div onClick={startOverClick} className="start-over-container">Start Over</div>
         </div>
     );
 }
 
-// export default welcome.component
 

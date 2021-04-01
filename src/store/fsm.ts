@@ -1,17 +1,15 @@
 import { Dispatch } from 'react';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { BaseSteps } from './enums/base-enum';
 import { FsmState } from './models/fsm-state-object';
 import { Link } from './models/link';
 import { Node } from './models/node';
 
-const subject$ = new Subject();
 
 const initialState = {
     initialNodeId: '',
     step: '',
     previousStep: '',
-    data: [] as any,
     dataMap: new Map<string, any>(),
     stepsHistory: [] as any,
     error: '',
@@ -21,14 +19,13 @@ const initialState = {
     nodeIdToNodes: new Map<string, Node[]>()
 } as FsmState;
 
+const subject$ = new BehaviorSubject(initialState);
 let state = initialState;
 
-export class FsmStore<E extends BaseSteps> {
+export class FsmStore {
     initialState: FsmState;
-    private userStateEnum: E;
-    constructor(userStateEnum: E) {
+    constructor() {
         this.initialState = initialState;
-        this.userStateEnum = userStateEnum;
     }
     init(nodes: Node[], links: Link[], initialNodeId: string) {
         const { nodeIdToNodes, nodeIdToNode, err } = this.initValidTransitions(nodes, links);
@@ -36,7 +33,6 @@ export class FsmStore<E extends BaseSteps> {
         if (err) {
             successObj.success = false;
             successObj.error = 'There was a problem to initialize the state. please try again';
-            // return successObj;
         }
         state = {
             ...state,
@@ -57,34 +53,33 @@ export class FsmStore<E extends BaseSteps> {
         console.log('subscribe called', state);
         return subject$.subscribe(setState);
     }
-    unSubscribe() {
-        // if(subject$)
-        //     subject$.unsubscribe();
-        console.log('subscribe called', state);
-    }
     /**
      * The transition to the next state.
-     * @param data the object we want to add to data array
+     * @param nextStep The next node id
+     * @param data Optional data to save for each step.
      */
-    transition(data: any, nextStep: string) {
+    transition(nextStep: string, data?: any,) {
         const isValidTransition = this.isValidTransition(state.step, nextStep); 
-        if (state.step === this.userStateEnum.end) {
-            console.error('we are at the last step');
-            return;
-        }
         if(isValidTransition) {
-            const dataMap = new Map(state.dataMap);
-            dataMap.set(nextStep, data);
-            const tempStep = state.step;
-            state = {
-                ...state,
-                data: [...state.data, { ...data }],
-                dataMap,
-                previousStep: state.step,
-                step: nextStep,
-                error: '',
-            };
-            subject$.next(state);
+            if(data) {
+                const dataMap = new Map(state.dataMap);
+                dataMap.set(nextStep, data);
+                state = {
+                    ...state,
+                    dataMap,
+                    previousStep: state.step,
+                    step: nextStep,
+                    error: '',
+                };
+            }
+            else {
+                state = {
+                    ...state,
+                    previousStep: state.step,
+                    step: nextStep,
+                    error: '',
+                };
+            }
             console.log('transition', state);
         }
         else {
@@ -92,11 +87,11 @@ export class FsmStore<E extends BaseSteps> {
                 ...state,
                 error: 'Error not a valid transition',
             }
-            subject$.next(state);
         }
+        subject$.next(state);
     }
     clearStore() {
-        state = { ...state, data: [] };
+        state = { ...state, dataMap: new Map<string, any>() };
         subject$.next(state);
     }
     getState() {
@@ -106,20 +101,19 @@ export class FsmStore<E extends BaseSteps> {
         let nodeIdToNode = new Map<string, Node>();
         let nodeIdToNodes = new Map<string, Node[]>();
         let err = '';
-        if (nodes && nodes.length > 0 && links && links.length > 0) {
+        if (nodes?.length > 0 && links?.length > 0) {
             nodes.forEach((node) => {
                 nodeIdToNode.set(node.id, node);
             });
 
             links.forEach((link) => {
                 if (nodeIdToNodes.has(link.from)) {
-                    nodeIdToNodes.get(link.from)?.push(nodeIdToNode.get(link.to) || {} as Node)
+                    nodeIdToNodes.get(link.from)?.push(nodeIdToNode.get(link.to) || {} as Node);
                 }
                 else {
-                    nodeIdToNodes.set(link.from, [nodeIdToNode.get(link.to) || {} as Node])
+                    nodeIdToNodes.set(link.from, [nodeIdToNode.get(link.to) || {} as Node]);
                 }
             });
-
         }
         else {
             err = 'nodes or links array is empty';
@@ -128,9 +122,13 @@ export class FsmStore<E extends BaseSteps> {
         return { nodeIdToNode, nodeIdToNodes, err }
     }
     private isValidTransition(from: string, to: string) {
-        const link = state.links.find(l => l.from === from && l.to === to);
-        if (link) {
-            return true;
+        const nodesArr = state.nodeIdToNodes.get(from);
+        // can't use ? here because of Strict null checks for Map members
+        if(nodesArr && nodesArr.length > 0) {
+            const node = nodesArr.find(n => n.id === to);
+            if (node) {
+                return true;
+            }
         }
         return false;
     }
