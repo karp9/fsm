@@ -8,7 +8,7 @@ import '../welcome-component/welcome.component.scss';
 
 export interface IProps {
     fsmStore: FsmStore;
-};
+}
 
 export interface IState {
     fsmState: FsmState;
