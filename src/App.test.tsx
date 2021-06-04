@@ -1,18 +1,27 @@
 import React from 'react';
-import { render, screen} from '@testing-library/react';
+import { render, RenderOptions, screen} from '@testing-library/react';
 import App from './App';
 import ReactDOM from 'react-dom';
+import { act } from 'react-dom/test-utils';
 
+let container: any;
 
-it('renders without crashing', () => {
-  render(<App />);
+beforeEach(() => {
+  container = document.createElement('div');
+  
+  document.body.appendChild(container);
 });
 
+afterEach(() => {
+  document.body.removeChild(container);
+  container = null;
+});
 
-// test('renders learn react link', () => {
-//   render(<App />);
-//   const linkElement = screen.getByText(/learn react/i);
-//   expect(linkElement).toBeInTheDocument();
-// });
+it('renders without crashing', async () => {
+  act(()=> {
+    render(<App />, container);
+  
+  });  
+});
 
 
