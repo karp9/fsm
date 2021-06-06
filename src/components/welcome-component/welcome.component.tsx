@@ -1,9 +1,6 @@
 import {
   Button,
-  FormControl,
-  MenuItem,
-  Select,
-  unstable_createMuiStrictModeTheme as createMuiTheme,
+  unstable_createMuiStrictModeTheme as createMultiTheme,
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { Subscription } from "rxjs";
@@ -20,7 +17,7 @@ export interface IState {
 }
 
 export function WelcomeComponent(props: IProps) {
-  const fsmStore = props.fsmStore;
+  const {fsmStore} = props;
   const [fsmState, setFsmState] = useState(props.fsmStore.getState());
   // for cleanup
   const [subscription$, setSubscription] = useState<Subscription>();
@@ -33,14 +30,14 @@ export function WelcomeComponent(props: IProps) {
       if (subscription$) {
         subscription$.unsubscribe();
       }
-      console.log("unMount was called welcome");
+      console.log("unMount was called FsmView");
     };
   }, []);
 
   const handleChange = (event: any) => {
     const nodeId = event.target.value;
     if (nodeId) {
-      fsmStore.transition(nodeId, {
+      fsmStore.transition(nodeId, { // Optional Mock Data is available.
         name: "Mock data",
         id: "22123",
         nodeId: nodeId,
@@ -65,7 +62,6 @@ export function WelcomeComponent(props: IProps) {
             value={selectedValue}
             onChange={handleChange}
             name="optional-steps"
-            id=""
           >
             <option className="select-option" key={"empty"} value={""}>
               Select a node

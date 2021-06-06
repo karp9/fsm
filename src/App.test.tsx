@@ -8,19 +8,17 @@ let container: any;
 
 beforeEach(() => {
   container = document.createElement('div');
-  
   document.body.appendChild(container);
 });
 
-afterEach(() => {
+afterAll(() => {
   document.body.removeChild(container);
   container = null;
 });
 
-it('renders without crashing', async () => {
+it('renders without crashing', () => {
   act(()=> {
     render(<App />, container);
-  
   });  
 });
 

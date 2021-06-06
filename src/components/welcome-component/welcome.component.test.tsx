@@ -15,17 +15,17 @@ const links: Link[] = mockLinks;
 
 beforeEach(() => {
   container = document.createElement("div");
+  document.body.appendChild(container);
   fsm = new FsmStore();
 });
 
-afterEach(() => {
+afterAll(() => {
   document.body.removeChild(container);
   container = null;
 });
 
-it("renders without crashing", async () => {
+it("renders without crashing", () => {
   fsm.init(nodes, links, nodes[0].id);
-
   act(() => {
     render(<WelcomeComponent fsmStore={fsStore} />, container);
   });

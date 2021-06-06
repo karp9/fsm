@@ -11,33 +11,33 @@ beforeEach(() => {
   fsm = new FsmStore();
 });
 
-it("Init with no errors", async () => {
+it("Init with no errors", () => {
   const { success, error } = fsm.init(nodes, links, nodes[0].id);
   expect(success).toBeTruthy();
   expect(error).toEqual("");
 });
 
-it("Init with errors", async () => {
+it("Init with errors", () => {
   const { success, error } = fsm.init([] as Node[], links, nodes[0].id);
   expect(success).toBeFalsy();
   expect(error.length).toBeGreaterThan(0);
 });
 
-it("Valid transition", async () => {
+it("Valid transition", () => {
   fsm.init(nodes, links, nodes[0].id);
   fsm.transition("n1");
   const state = fsm.getState();
   expect(state.error).toEqual("");
 });
 
-it("Not a valid transition", async () => {
+it("Not a valid transition", () => {
   fsm.init(nodes, links, nodes[0].id);
   fsm.transition("n0");
   const state = fsm.getState();
   expect(state.error.length).toBeGreaterThan(0);
 });
 
-it("Clear store works", async () => {
+it("Clear store works", () => {
   fsm.init(nodes, links, nodes[0].id);
   const tempState = fsm.getState();
   fsm.clearStore();
@@ -46,7 +46,7 @@ it("Clear store works", async () => {
   expect(stateAfterClear.nodes.length).toEqual(0);
 });
 
-it("Returns a new reference of state", async () => {
+it("Returns a new reference of state", () => {
   fsm.init(nodes, links, nodes[0].id);
   const tempState = fsm.getState();
   const tempState2 = fsm.getState();

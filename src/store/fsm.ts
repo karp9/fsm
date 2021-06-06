@@ -1,6 +1,5 @@
-import { Dispatch } from "react";
-import { BehaviorSubject, Subject } from "rxjs";
-import { BaseSteps } from "./enums/base-enum";
+import { Dispatch } from "react"; // For type only.
+import { BehaviorSubject } from "rxjs";
 import { FsmState } from "./models/fsm-state-object";
 import { Link } from "./models/link";
 import { Node } from "./models/node";
@@ -26,6 +25,7 @@ export class FsmStore {
   constructor() {
     this.initialState = initialState;
   }
+
   init(nodes: Node[], links: Link[], initialNodeId: string) {
     const { nodeIdToNodes, nodeIdToNode, err } = this.initValidTransitions(
       nodes,
@@ -52,10 +52,12 @@ export class FsmStore {
     console.log("init called", state);
     return successObj;
   }
+
   subscribe(setState: Dispatch<any>) {
     console.log("subscribe called", state);
     return subject$.subscribe(setState);
   }
+
   /**
    * The transition to the next state.
    * @param nextStep The next node id
@@ -91,13 +93,16 @@ export class FsmStore {
     }
     subject$.next(state);
   }
+
   clearStore() {
     state = { ...initialState };
     subject$.next(state);
   }
+
   getState() {
     return { ...state };
   }
+
   private initValidTransitions(nodes: Node[], links: Link[]) {
     let nodeIdToNode = new Map<string, Node>();
     let nodeIdToNodes = new Map<string, Node[]>();
@@ -121,9 +126,9 @@ export class FsmStore {
     } else {
       err = "nodes or links array is empty";
     }
-
     return { nodeIdToNode, nodeIdToNodes, err };
   }
+
   private isValidTransition(from: string, to: string) {
     const nodesArr = state.nodeIdToNodes.get(from);
     // can't use ? here because of Strict null checks for Map members
