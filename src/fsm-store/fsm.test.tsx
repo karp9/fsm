@@ -1,6 +1,6 @@
 import { FsmStore } from "./fsm";
-import { Node } from "../store/models/node";
-import { Link } from "../store/models/link";
+import { Node } from "./models/node";
+import { Link } from "./models/link";
 import { mockLinks, mockNodes } from "./models/mock-objects";
 
 let fsm: FsmStore;

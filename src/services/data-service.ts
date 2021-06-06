@@ -1,6 +1,6 @@
 import { of } from "rxjs";
-import { Link } from "../store/models/link";
-import { Node } from "../store/models/node";
+import { Link } from "../fsm-store/models/link";
+import { Node } from "../fsm-store/models/node";
 
 export async function getNodesAndLinks() {
   const nodes: Node[] = [

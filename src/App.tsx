@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./App.scss";
-import { FsmStore } from "./store/fsm";
-import { WelcomeComponent } from "./components/welcome-component/welcome.component";
-import { Node } from "./store/models/node";
-import { Link } from "./store/models/link";
+import { FsmStore } from "./fsm-store/fsm";
+import { FsmViewComponent } from "./components/fsm-view-component/fsm-view.component";
+import { Node } from "./fsm-store/models/node";
+import { Link } from "./fsm-store/models/link";
 import { getNodesAndLinks } from "./services/data-service";
 import useAsyncTask from "./services/http-utils/http-utils";
 
@@ -33,7 +33,7 @@ function App() {
     <div className="App">
       {task.status !== "SUCCESS" && <div>{task.status + "..."}</div>}
       {nodes?.length > 0 && links?.length > 0 && (
-        <WelcomeComponent fsmStore={fsStore} />
+        <FsmViewComponent fsmStore={fsStore} />
       )}
     </div>
   );

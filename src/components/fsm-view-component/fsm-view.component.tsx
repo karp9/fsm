@@ -4,9 +4,9 @@ import {
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { Subscription } from "rxjs";
-import { FsmStore } from "../../store/fsm";
-import { FsmState } from "../../store/models/fsm-state-object";
-import "../welcome-component/welcome.component.scss";
+import { FsmStore } from "../../fsm-store/fsm";
+import { FsmState } from "../../fsm-store/models/fsm-state-object";
+import "./fsm-view.component.scss";
 
 export interface IProps {
   fsmStore: FsmStore;
@@ -16,7 +16,7 @@ export interface IState {
   fsmState: FsmState;
 }
 
-export function WelcomeComponent(props: IProps) {
+export function FsmViewComponent(props: IProps) {
   const {fsmStore} = props;
   const [fsmState, setFsmState] = useState(props.fsmStore.getState());
   // for cleanup

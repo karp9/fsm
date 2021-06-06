@@ -1,10 +1,10 @@
 import { render } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { FsmStore } from "../../store/fsm";
-import { Link } from "../../store/models/link";
-import { Node } from "../../store/models/node";
-import { mockLinks, mockNodes } from "../../store/models/mock-objects";
-import { WelcomeComponent } from "./welcome.component";
+import { FsmStore } from "../../fsm-store/fsm";
+import { Link } from "../../fsm-store/models/link";
+import { Node } from "../../fsm-store/models/node";
+import { mockLinks, mockNodes } from "../../fsm-store/models/mock-objects";
+import { FsmViewComponent } from "./fsm-view.component";
 
 let fsStore = new FsmStore();
 let container: any;
@@ -27,6 +27,6 @@ afterAll(() => {
 it("renders without crashing", () => {
   fsm.init(nodes, links, nodes[0].id);
   act(() => {
-    render(<WelcomeComponent fsmStore={fsStore} />, container);
+    render(<FsmViewComponent fsmStore={fsStore} />, container);
   });
 });
