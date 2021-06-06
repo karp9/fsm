@@ -14,6 +14,7 @@ export async function getNodesAndLinks() {
     { from: "n0", to: "n1" },
     { from: "n0", to: "n2" },
     { from: "n1", to: "n2" },
+    { from: "n2", to: "n1" },
     { from: "n2", to: "n3" },
     { from: "n3", to: "n4" },
     { from: "n0", to: "n4" },
