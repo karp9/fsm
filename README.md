@@ -1,4 +1,4 @@
-# Getting Started with Tal's Fsm Using Rxjs Subject
+# Getting Started With Tal's Fsm Using Rxjs Subject
 
 ## Installation
 1. Clone the Repo.
