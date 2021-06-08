@@ -8,7 +8,7 @@ export const mockNodes: Node[] = [
   { id: "n3", name: "node3" },
 ];
 export const mockLinks: Link[] = [
-  { from: "n0", to: "n1" },
-  { from: "n1", to: "n2" },
-  { from: "n2", to: "n3" },
+  { source: "n0", target: "n1" },
+  { source: "n1", target: "n2" },
+  { source: "n2", target: "n3" },
 ];

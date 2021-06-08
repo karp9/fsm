@@ -1,7 +1,4 @@
-import {
-  Button,
-  unstable_createMuiStrictModeTheme as createMultiTheme,
-} from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { Subscription } from "rxjs";
 import { FsmStore } from "../../fsm-store/fsm";
@@ -17,7 +14,7 @@ export interface IState {
 }
 
 export function FsmViewComponent(props: IProps) {
-  const {fsmStore} = props;
+  const { fsmStore } = props;
   const [fsmState, setFsmState] = useState(props.fsmStore.getState());
   // for cleanup
   const [subscription$, setSubscription] = useState<Subscription>();
@@ -37,7 +34,8 @@ export function FsmViewComponent(props: IProps) {
   const handleChange = (event: any) => {
     const nodeId = event.target.value;
     if (nodeId) {
-      fsmStore.transition(nodeId, { // Optional Mock Data is available.
+      fsmStore.transition(nodeId, {
+        // Optional Mock Data is available.
         name: "Mock data",
         id: "22123",
         nodeId: nodeId,
@@ -54,6 +52,7 @@ export function FsmViewComponent(props: IProps) {
     <div className="container">
       <div className="text-header">Tal's Fsm Using Rxjs Subject</div>
       <div className="text-item">Current Step: {currentNode?.name}</div>
+
       {fsmState.error && <div> {fsmState.error}</div>}
       <div>
         {currentStepOptions?.length && (

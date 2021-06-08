@@ -11,13 +11,13 @@ export async function getNodesAndLinks() {
     { id: "n4", name: "Node4" },
   ];
   const links: Link[] = [
-    { from: "n0", to: "n1" },
-    { from: "n0", to: "n2" },
-    { from: "n1", to: "n2" },
-    { from: "n2", to: "n1" },
-    { from: "n2", to: "n3" },
-    { from: "n3", to: "n4" },
-    { from: "n0", to: "n4" },
+    { source: "n0", target: "n1" },
+    { source: "n0", target: "n2" },
+    { source: "n1", target: "n2" },
+    { source: "n2", target: "n1" },
+    { source: "n2", target: "n3" },
+    { source: "n3", target: "n4" },
+    { source: "n0", target: "n4" },
   ];
 
   return of({ nodes, links }).toPromise();

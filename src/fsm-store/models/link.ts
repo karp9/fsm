@@ -1,4 +1,4 @@
 export interface Link {
-    from: string,
-    to: string
+    source: string,
+    target: string
 }

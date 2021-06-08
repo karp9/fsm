@@ -113,13 +113,13 @@ export class FsmStore {
       });
 
       links.forEach((link) => {
-        if (nodeIdToNodes.has(link.from)) {
+        if (nodeIdToNodes.has(link.source)) {
           nodeIdToNodes
-            .get(link.from)
-            ?.push(nodeIdToNode.get(link.to) || ({} as Node));
+            .get(link.source)
+            ?.push(nodeIdToNode.get(link.target) || ({} as Node));
         } else {
-          nodeIdToNodes.set(link.from, [
-            nodeIdToNode.get(link.to) || ({} as Node),
+          nodeIdToNodes.set(link.source, [
+            nodeIdToNode.get(link.target) || ({} as Node),
           ]);
         }
       });
