@@ -1,7 +1,7 @@
 # Getting Started With Tal's Fsm Using Rxjs Subject
 
 ## Installation
-1. Clone the Repo.
+1. Clone the Repository.
 2. `npm install`
 3. `npm start`
 
